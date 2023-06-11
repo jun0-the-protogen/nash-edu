@@ -25,6 +25,31 @@ function end_battle(player_state, enemy) --Deinitializes the battle state
 	state = "overworld"
 end
 
-function love.load() 
-	init_battle() --Prototype 1 is testing just the battle system's effectiveness for learning.
+function love.load() --Place initializations here
+	--format for all creatures TODO: helper function
+	player = {
+		hp = 10,
+		moves = { --TODO: functions for attack types
+			{
+				name = "Slash"
+				move_type = "i_atk" --instant attack
+				value = 2
+				same_move_cancel = true --when both parties attack, the attack gets cancelled
+			},
+			{
+				name = "Charge"
+				move_type = "i_heal" --instat heal
+				value = 1
+				same_move_cancel = false --when both parties heal, it's just a heal
+			},
+			{
+				name = "Heavy Slash"
+				move_type = "c_atk" --charge-up attack
+				value = 5
+				same_move_cancel = true
+				inv = false --See flight in the pokemon moveset for an instance of true
+			}
+		}
+	}
+	init_battle(player) --Prototype 1 is testing just the battle system's effectiveness for learning.
 end
