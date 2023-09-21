@@ -1,6 +1,5 @@
 --[[
-This code is structured like a finite state machine. https://en.wikipedia.org/wiki/Finite-state_machine
-Function structure *strictly* must have all variables that it uses, as well as a summary of the function's purpose and output (if any).
+Functions must have a summary of the function's purpose and output (if any).
 Ex:
 function player_hp_display(cur, max) --Displays player hp to the screen.
 	--code here--
@@ -8,48 +7,61 @@ end
 
 --]]
 
-function init_battle(player_state, enemy) --Initializes battle between player and enemy
-	state = "battle-start"
-	-- operational code TODO: graphics and stuff go here
-	state = "battle"
-end
+local utils = require("src/utils")
+local gui = require("src/gui")
+local creatures = require("src/creatures")
 
-function battle_state(player_state, enemy) --Gameplay loop during the battle state.
-	--TODO: UI movement
-	--TODO: check for battle-ending conditions
-end
-
-function end_battle(player_state, enemy) --Deinitializes the battle state
-	state = "battle-end"
-	--operational code TODO: graphics and stuff go here
-	state = "overworld"
-end
+local states = {
+	battle = require("src/states/battle"),
+}
+state = "battle"
 
 function love.load() --Place initializations here
-	--format for all creatures TODO: helper function
-	player = {
-		hp = 10,
-		moves = { --TODO: functions for attack types
-			{
-				name = "Slash"
-				move_type = "i_atk" --instant attack
-				value = 2
-				same_move_cancel = true --when both parties attack, the attack gets cancelled
-			},
-			{
-				name = "Charge"
-				move_type = "i_heal" --instat heal
-				value = 1
-				same_move_cancel = false --when both parties heal, it's just a heal
-			},
-			{
-				name = "Heavy Slash"
-				move_type = "c_atk" --charge-up attack
-				value = 5
-				same_move_cancel = true
-				inv = false --See flight in the pokemon moveset for an instance of true
-			}
-		}
-	}
-	init_battle(player) --Prototype 1 is testing just the battle system's effectiveness for learning.
+	math.randomseed(os.time()) -- just to set it up
+	w, h, s = 640, 360, 2
+	success = love.window.setMode(w*s, h*s, {} )
+
+	tutorial = true
+
+	player = creatures.getCreature("player")
+	enemy = creatures.getCreature("pentagon")
+	enemy2 = creatures.getCreature("pentavian")
+	
+	states.battle("", {
+		party1 = player,
+		party2 = enemy2,
+	})
+end
+
+--[[ --TODO: rescale-friendly UI
+function love.window.resize(w, h)
+	gui.canvases.redraw()
+end
+]]
+function love.draw()
+	gui.canvases.draw()
+	--XXX: Debug
+	--({}) -> ""
+	function tts(x, depth)
+		depth = depth or ""
+		ret = ""
+		for k, v in next, x do
+			ret = ret.."\n"..depth.."["..tostring(k).."]: "..(type(v) == "table" and tts(v, depth.."\t") or v == nil and "nil" or tostring(v))
+		end
+		ret = #ret == 0 and "{}" or ret
+		return ret
+	end
+	-- note: best seems not to work
+	-- love.graphics.print(tts(party2.knownMoveCombos), X(0), 0)
+	-- love.graphics.print(tts(party1.knownMoveCombos), 0, 0)
+end
+
+function love.update(dt) --currently handles all GUI interfacing (other than the function below)
+	gui.mouse_events.iter(state, love.mouse.getX(), love.mouse.getY())
+end
+
+function love.mousepressed(x, y, button, istouch)
+	if button >= 1 then
+		gui.mouse_events.iter(state, x, y, true)
+	end
 end
