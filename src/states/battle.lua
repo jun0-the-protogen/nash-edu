@@ -1,5 +1,3 @@
-local utils = require("src/utils")
-
 party1 = {}
 party2 = {}
 local lastCombo = {} -- Remember to reassign the table every time!
@@ -138,15 +136,14 @@ local function resolveMoves(move1, move2, party1, party2)
 		enemyDamage = d2 - h1,
 	}
 
-	--FIXME: last move
 	if not party1.knownMoveCombos[move2.name][move1.name] then
 		local best = party1.knownMoveCombos[move2.name].best
 		party1.knownMoveCombos[move2.name].best = best.name and (
 			best.enemyDamage - best.selfDamage <
 			m1.enemyDamage - m1.selfDamage and
-				utils.shallowcopy(m1) or
+				m1 or
 				best) or
-			utils.shallowcopy(m1)
+			m1
 		party1.knownMoveCombos[move2.name][move1.name] = m1
 	end
 	if not party2.knownMoveCombos[move1.name][move2.name] then
@@ -154,9 +151,9 @@ local function resolveMoves(move1, move2, party1, party2)
 		party2.knownMoveCombos[move1.name].best = best.name and (
 			best.enemyDamage - best.selfDamage <
 			m2.enemyDamage - m2.selfDamage and
-				utils.shallowcopy(m2) or
+				m2 or
 				best) or
-			utils.shallowcopy(m2)
+			m2
 		party2.knownMoveCombos[move1.name][move2.name] = m2
 	end
 
