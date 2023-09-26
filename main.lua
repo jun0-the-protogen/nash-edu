@@ -7,7 +7,6 @@ end
 
 --]]
 
-local utils = require("src/utils")
 local gui = require("src/gui")
 local creatures = require("src/creatures")
 
@@ -29,7 +28,7 @@ function love.load() --Place initializations here
 	
 	states.battle("", {
 		party1 = player,
-		party2 = enemy2,
+		party2 = enemy,
 	})
 end
 

@@ -202,8 +202,6 @@ local function aiGenerator(exploreUnknownChance, randomChance)
 		exploredAll[i] = false
 	end
 
-	-- FIXME: Issues with AI exploration:
-		-- Switching from one move that is already fully explored activates the other exploreAll boolean of another move.
 	-- party2{moves, knownMoveCombos} >> (int) -> int
 	return function(enemyMoveId)
 		print("move")
@@ -234,11 +232,12 @@ local function aiGenerator(exploreUnknownChance, randomChance)
 			end
 		end
 
-		-- FIXME: it never gets here
 		-- beatLast implementation
 		if lastCombo[1] and lastCombo[2] then
 			if moveCombos[lastCombo[1].name].best then
-				return moves[moveCombos[lastCombo[1].name].best.name].id
+				a = moves[moveCombos[lastCombo[1].name].best.name].id
+				print(a)
+				return a
 			end
 		end
 		error("Oops!")
@@ -549,22 +548,22 @@ local function drawFunc()
 				else
 					love.graphics.setColor(0, 0.8, 0, 0.5)
 				end
-				love.graphics.polygon("fill", polyDiamondCellP1Half(j - 1, i - 1))
+				love.graphics.polygon("fill", polyDiamondCellP1Half(3 - j, i - 1))
 				if enemyDamage >= 0 then
 					love.graphics.setColor(1, 0, 0, 0.5)
 				else
 					love.graphics.setColor(0.8, 0, 0, 0.5)
 				end
-				love.graphics.polygon("fill", polyDiamondCellP2Half(j - 1, i - 1))
+				love.graphics.polygon("fill", polyDiamondCellP2Half(3 - j, i - 1))
 				love.graphics.setColor(baseColor.edge)
 				love.graphics.setLineWidth(S(2))
-				love.graphics.line(j * gui.diamondSizeX + X(-140), (i - 1) * gui.diamondSizeY + Y(120), (j - 1) * gui.diamondSizeX + X(-140), i * gui.diamondSizeY + Y(120))
+				love.graphics.line((4 - j) * gui.diamondSizeX + X(-140), (i - 1) * gui.diamondSizeY + Y(120), (3 - j) * gui.diamondSizeX + X(-140), i * gui.diamondSizeY + Y(120))
 			end
 
 			drawBufTop[#drawBufTop + 1] = function()
 				love.graphics.setColor(1, 1, 1, 1)
-				love.graphics.print(selfDamage, (j - 2/3) * gui.diamondSizeX + X(-140), (i - 2/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
-				love.graphics.print(enemyDamage, (j - 1/3) * gui.diamondSizeX + X(-140), (i - 1/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
+				love.graphics.print(selfDamage, (10/3 - j) * gui.diamondSizeX + X(-140), (i - 2/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
+				love.graphics.print(enemyDamage, (11/3 - j) * gui.diamondSizeX + X(-140), (i - 1/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
 			end
 		end
 	end
