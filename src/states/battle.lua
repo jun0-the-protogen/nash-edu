@@ -528,7 +528,7 @@ local function drawFunc()
 		if p2selected then
 			drawBuf[#drawBuf+1] = function ()
 				love.graphics.setColor(1, 1, 1, 0.3)
-				love.graphics.polygon("fill", polyHighlightP2(p2selected-1))
+				love.graphics.polygon("fill", polyHighlightP2(3 - p2selected))
 			end
 		end
 	end
