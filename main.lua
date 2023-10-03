@@ -28,7 +28,7 @@ function love.load() --Place initializations here
 	
 	states.battle("", {
 		party1 = player,
-		party2 = enemy2,
+		party2 = enemy,
 	})
 end
 
