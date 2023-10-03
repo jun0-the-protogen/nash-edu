@@ -565,8 +565,8 @@ local function drawFunc()
 			drawBufTop[#drawBufTop + 1] = function()
 				love.graphics.setColor(1, 1, 1, 1)
 				-- TODO: center text
-				love.graphics.print((selfDamage < 0 and "+" or "")..tostring(math.abs(selfDamage)), (1/3 + #party2.moves - j) * gui.diamondSizeX + X(-140), (i - 2/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
-				love.graphics.print((enemyDamage < 0 and "+" or "")..tostring(math.abs(enemyDamage)), (2/3 + #party2.moves - j) * gui.diamondSizeX + X(-140), (i - 1/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
+				love.graphics.print((selfDamage < 0 and "+" or selfDamage > 0 and "-" or "")..tostring(math.abs(selfDamage)), (1/3 + #party2.moves - j) * gui.diamondSizeX + X(-140), (i - 2/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
+				love.graphics.print((enemyDamage < 0 and "+" or enemyDamage > 0 and "-" or "")..tostring(math.abs(enemyDamage)), (2/3 + #party2.moves - j) * gui.diamondSizeX + X(-140), (i - 1/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
 			end
 		end
 	end
