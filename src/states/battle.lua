@@ -332,18 +332,20 @@ local party2offset = 0
 
 -- party1,moves >> (int) -> poly
 local function moveButtonHighlight(y)
-	local step = S(150) / #party1.moves
-	local x1 = X(-150) - tabsize + (y - 1) * step + S(7)
-	local x2 = X(-150) + (y + 1) * step
+	-- FIXME: outer X coordinates not fully extending out.
+	local step = 150 / #party1.moves
+	local dstep = S(step)
+	local x1 = X(-150 - tabsize + y * step)
+	local x2 = X(-150 + (y + 1) * step)
 
 	return x1,
-		Y(-30) + y * step,
-		x2 - step,
-		Y(-30) + y * step,
+		Y(-30) + y * dstep,
+		x2 - dstep,
+		Y(-30) + y * dstep,
 		x2,
-		Y(-30) + (y + 1) * step,
+		Y(-30) + (y + 1) * dstep,
 		x1,
-		Y(-30) + (y + 1) * step
+		Y(-30) + (y + 1) * dstep
 end
 
 local diamondXDrawPrio = false
@@ -626,11 +628,12 @@ local function diamondHover()
 	love.graphics.polygon("line", X(0), Y(d[1]), X(d[2]), Y(d[5]), X(0), Y(d[3]), X(-d[2]), Y(d[5]))
 end
 
--- p1selected, attackAnimPhase >> () >> attackAnimPhase, attackAnimTimer, attackAnimData
-local function diamondClick()
+-- p1selected, attackAnimPhase >> (int) >> attackAnimPhase, attackAnimTimer, attackAnimData
+local function diamondClick(clicks)
+	if clicks <= 1 then return end
 	if p1selected > 0 and attackAnimPhase == "none" then
 		attackAnimPhase = "scramble"
-		attackAnimTimer = 0 --XXX: 2
+		attackAnimTimer = 2
 		attackAnimData = {}
 	end
 end
@@ -639,22 +642,27 @@ end
 -- (_, _, cx, cy) -> bool
 local function p1Collider(x, y, cx, cy) -- Ignores calling conventions, but that's how it works
 	if cy >= Y(-30) and cy <= Y(-180) then
-		local step = S(150) / #party1.moves
-		y = math.floor((cy - Y(-30)) / step) -- integer value
+		local step = 150 / #party1.moves --TODO: Turn code into a function
+		local y = math.floor((cy - Y(-30)) / S(step)) -- integer value
 		-- horizontal bounds
-		local x1 = X(-150) - tabsize + (y - 1) * step
-		local x2 = X(-150) + (y + 1) * step
+		local x1 = X(-150 - tabsize + y * step)
+		local x2 = X(-150 + (y + 1) * step)
 	
 		return cx >= x1 and cx <= x2
 	end
 end
 
--- Assuming the collider is correct, this will select the move based on cursor Y position.
-local p1Click = function()
+-- This will select the move based on cursor Y position.
+local p1Click = function(clicks)
 	local step = S(150) / #party1.moves
 	y = math.floor((love.mouse.getY() - Y(-30)) / step) -- integer value
 
 	if attackAnimPhase == "none" then
+		if clicks > 1 then
+			if p1selected == y + 1 then
+				diamondClick(clicks) -- function reuse
+			end
+		end
 		p1selected = y + 1
 	end
 

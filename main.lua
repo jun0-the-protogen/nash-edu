@@ -20,10 +20,11 @@ function love.load() --Place initializations here
 	w, h, s = 640, 360, 2
 	success = love.window.setMode(w*s, h*s, {} )
 
-	tutorial = true
+	tutorial = true --TODO
 
-	player = creatures.getCreature("player")
-	enemy = creatures.getCreature("pentagon")
+	player = creatures.getCreature("demoPlayer")
+	player2 = creatures.getCreature("player")
+	enemy = creatures.getCreature("demoPentagon")
 	enemy2 = creatures.getCreature("pentavian")
 	
 	states.battle("", {
@@ -50,17 +51,16 @@ function love.draw()
 		ret = #ret == 0 and "{}" or ret
 		return ret
 	end
-	-- note: best seems not to work
-	-- love.graphics.print(tts(party2.knownMoveCombos), X(0), 0)
-	-- love.graphics.print(tts(party1.knownMoveCombos), 0, 0)
+	-- love.graphics.print(tts(party2.moves), X(0), 0)
+	-- love.graphics.print(tts(party1.moves), 0, 0)
 end
 
 function love.update(dt) --currently handles all GUI interfacing (other than the function below)
 	gui.mouse_events.iter(state, love.mouse.getX(), love.mouse.getY())
 end
 
-function love.mousepressed(x, y, button, istouch)
-	if button >= 1 then
-		gui.mouse_events.iter(state, x, y, true)
+function love.mousepressed(x, y, button, istouch, presses)
+	if button == 1 then
+		gui.mouse_events.iter(state, x, y, true, presses)
 	end
 end

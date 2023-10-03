@@ -1,9 +1,11 @@
 creatures = {}
 
 local moves = require("src/moves")
+local utils = require("src/utils")
 
 --initalises some cached data for moves
 local function initMoves(moves)
+	moves = utils.shallowcopy(moves)
 	local i
 	for i=1, #moves do
 		moves[i].id = i
@@ -14,9 +16,27 @@ end
 
 
 local allCreatures = {
-	player = {
+	demoPlayer = {
 		humanname = "Player",
 		maxHp = 10,
+		sprite = "a.png",
+		moves = initMoves{
+			moves.Slash,
+			moves.Charge,
+		},
+	},
+	demoPentagon = {
+		humanname = "Pentagon",
+		maxHp = 10,
+		sprite = "b.png",
+		moves = initMoves{
+			moves.Slash,
+			moves.Charge,
+		},
+	},
+	player = {
+		humanname = "Player",
+		maxHp = 15,
 		sprite = "a.png",
 		moves = initMoves{
 			moves.Slash,
@@ -26,7 +46,7 @@ local allCreatures = {
 	},
 	pentagon = {
 		humanname = "Pentagon",
-		maxHp = 10,
+		maxHp = 15,
 		sprite = "b.png",
 		moves = initMoves{
 			moves.Slash,
@@ -68,7 +88,7 @@ function creatures.getCreature(name)
 		sprite = creatureDef.sprite,
 		moves = creatureDef.moves,
 		-- For player: Used to store the known move combination damage numbers to the GUI. TODO: Store in a savefile.
-		-- For NPCs: Used to determine which move to select based on the players actions. This is initialized at the start of the battle. 
+		-- For NPCs: Used to determine which move to select based on the players actions. This is initialized at the start of the battle.
 		knownMoveCombos = {},
 	}
 

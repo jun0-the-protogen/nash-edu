@@ -100,7 +100,7 @@ local mouse_events_mt = {
 	--Custom metamethods
 	__index = function(self, k)
 		local function clear() self = {} end
-		local function iter(state, cx, cy, click)
+		local function iter(state, cx, cy, click, presses)
 			if click == nil then click = false end
 			local i
 			if self[state] then
@@ -109,11 +109,11 @@ local mouse_events_mt = {
 					if button then
 						if button.collider(button.x, button.y, cx, cy) then
 							if click then
-								button.click()
+								button.click(presses)
 							else
 								button.hover()
 							end
-							return true --shortcirciut, and for debug purposes
+							return true --shortcirciut, and for debug purposes TODO: passthrough
 						end
 					end
 				end
