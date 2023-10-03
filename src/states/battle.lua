@@ -528,7 +528,7 @@ local function drawFunc()
 		if p2selected then
 			drawBuf[#drawBuf+1] = function ()
 				love.graphics.setColor(1, 1, 1, 0.3)
-				love.graphics.polygon("fill", polyHighlightP2(3 - p2selected))
+				love.graphics.polygon("fill", polyHighlightP2(#party2.moves - p2selected))
 			end
 		end
 	end
@@ -548,22 +548,22 @@ local function drawFunc()
 				else
 					love.graphics.setColor(0, 0.8, 0, 0.5)
 				end
-				love.graphics.polygon("fill", polyDiamondCellP1Half(3 - j, i - 1))
+				love.graphics.polygon("fill", polyDiamondCellP1Half(#party2.moves - j, i - 1))
 				if enemyDamage >= 0 then
 					love.graphics.setColor(1, 0, 0, 0.5)
 				else
 					love.graphics.setColor(0.8, 0, 0, 0.5)
 				end
-				love.graphics.polygon("fill", polyDiamondCellP2Half(3 - j, i - 1))
+				love.graphics.polygon("fill", polyDiamondCellP2Half(#party2.moves - j, i - 1))
 				love.graphics.setColor(baseColor.edge)
 				love.graphics.setLineWidth(S(2))
-				love.graphics.line((4 - j) * gui.diamondSizeX + X(-140), (i - 1) * gui.diamondSizeY + Y(120), (3 - j) * gui.diamondSizeX + X(-140), i * gui.diamondSizeY + Y(120))
+				love.graphics.line((#party2.moves + 1 - j) * gui.diamondSizeX + X(-140), (i - 1) * gui.diamondSizeY + Y(120), (#party2.moves - j) * gui.diamondSizeX + X(-140), i * gui.diamondSizeY + Y(120))
 			end
 
 			drawBufTop[#drawBufTop + 1] = function()
 				love.graphics.setColor(1, 1, 1, 1)
-				love.graphics.print(selfDamage, (10/3 - j) * gui.diamondSizeX + X(-140), (i - 2/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
-				love.graphics.print(enemyDamage, (11/3 - j) * gui.diamondSizeX + X(-140), (i - 1/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
+				love.graphics.print(selfDamage, (1/3 + #party2.moves - j) * gui.diamondSizeX + X(-140), (i - 2/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
+				love.graphics.print(enemyDamage, (2/3 + #party2.moves - j) * gui.diamondSizeX + X(-140), (i - 1/3) * gui.diamondSizeY + Y(120), math.rad(45), S(1), S(1))
 			end
 		end
 	end
