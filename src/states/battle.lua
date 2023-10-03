@@ -631,6 +631,11 @@ end
 
 -- p1selected, attackAnimPhase >> (int) >> attackAnimPhase, attackAnimTimer, attackAnimData
 local function diamondClick(clicks)
+	local _, y = diamondTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
+	y = math.floor((y - Y(-180)) / gui.diamondSizeY)
+	p1selected = y + 3 -- HACK
+	print(p1selected)
+
 	if clicks <= 1 then return end
 	if p1selected > 0 and attackAnimPhase == "none" then
 		attackAnimPhase = "scramble"
@@ -656,7 +661,7 @@ end
 -- This will select the move based on cursor Y position.
 local p1Click = function(clicks)
 	local step = S(150) / #party1.moves
-	y = math.floor((love.mouse.getY() - Y(-30)) / step) -- integer value
+	local y = math.floor((love.mouse.getY() - Y(-30)) / step) -- integer value
 
 	if attackAnimPhase == "none" then
 		if clicks > 1 then
