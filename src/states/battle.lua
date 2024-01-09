@@ -1,5 +1,6 @@
-party1 = {}
-party2 = {}
+local party1 = {}
+local party2 = {}
+
 local lastCombo = {} -- Remember to reassign the table every time!
 
 -- Factory to build a move iterator.
@@ -631,11 +632,6 @@ end
 
 -- p1selected, attackAnimPhase >> (int) >> attackAnimPhase, attackAnimTimer, attackAnimData
 local function diamondClick(clicks)
-	local _, y = diamondTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
-	y = math.floor((y - Y(-180)) / gui.diamondSizeY)
-	p1selected = y + 3 -- HACK
-	print(p1selected)
-
 	if clicks <= 1 then return end
 	if p1selected > 0 and attackAnimPhase == "none" then
 		attackAnimPhase = "scramble"
@@ -661,7 +657,7 @@ end
 -- This will select the move based on cursor Y position.
 local p1Click = function(clicks)
 	local step = S(150) / #party1.moves
-	local y = math.floor((love.mouse.getY() - Y(-30)) / step) -- integer value
+	y = math.floor((love.mouse.getY() - Y(-30)) / step) -- integer value
 
 	if attackAnimPhase == "none" then
 		if clicks > 1 then
@@ -679,6 +675,7 @@ end
 local function initBattleState(prevState, params)
 	party1 = params.party1
 	party2 = params.party2
+	initTutorial = params.initTutorial
 
 	local p1move, p2move
 	for i, j, m1, m2 in moveIter(3) do

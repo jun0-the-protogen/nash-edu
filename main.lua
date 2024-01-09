@@ -11,9 +11,10 @@ local gui = require("src/gui")
 local creatures = require("src/creatures")
 
 local states = {
+	tutorial = require("src/states/tutorial"),
 	battle = require("src/states/battle"),
 }
-state = "battle"
+state = "main"
 
 function love.load() --Place initializations here
 	math.randomseed(os.time()) -- just to set it up
@@ -21,15 +22,10 @@ function love.load() --Place initializations here
 	success = love.window.setMode(w*s, h*s, {} )
 
 	tutorial = true --TODO
-
-	player = creatures.getCreature("demoPlayer")
-	player2 = creatures.getCreature("player")
-	enemy = creatures.getCreature("demoPentagon")
-	enemy2 = creatures.getCreature("pentavian")
 	
-	states.battle("", {
-		party1 = player,
-		party2 = enemy,
+	states.tutorial("main", {
+		creatures = creatures,
+		states = states,
 	})
 end
 
