@@ -130,7 +130,7 @@ local mouse_events_mt = {
 		return rawget(self, k)
 	end,
 
-	__newindex = function(seld, k, v)
+	__newindex = function(self, k, v)
 		if k == "clear" or k == "iter" then
 			assert("The name "..k.." is already in use. Please use a different name for the button.")
 		else
