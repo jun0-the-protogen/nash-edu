@@ -4,31 +4,33 @@ function tutorial(prevState, params)
 	local creatures = params.creatures
 	local states = params.states
 
-	local battle = 1
-
-	-- TODO: pre-game instructions
-
-	state = "battle"
+	local tracker = 0
 
 	player = creatures.getCreature("player")
 	enemy = creatures.getCreature("demoPentagon")
 	enemy2 = creatures.getCreature("pentagon")
 
-	if battle == 1 then
+	if tracker == 0 then
+		-- TODO: pre-game instructions
+	elseif tracker === 1 then
+		state = "battle"
+
 		states.battle("tutorial", {
 			party1 = player,
 			party2 = enemy,
 			initTutorial = true
 		})
 
-	else -- "Let's try a harder one"
+	elseif tracker == 2 then
+		-- "Let's try a harder one"
 		 states.battle("tutorial", {
 			party1 = player,
 			party2 = enemy2,
 		})
+	else
+		-- TODO: post-game information
 	end
 
-	-- TODO: post-game information
 end
 
 return tutorial
