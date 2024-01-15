@@ -1,8 +1,8 @@
 ret = {
 	Charge = {
-		name = "Charge",
+		name = "Heal",
 		heal = 1,
-		speed = 5,
+		speed = 0,
 		cancelType = "bypass"
 	},
 	Crasher_Storm = {

@@ -1,6 +1,22 @@
-party1 = {}
-party2 = {}
+local party1 = {}
+local party2 = {}
+
 local lastCombo = {} -- Remember to reassign the table every time!
+
+local function deinitBattleState(prevState, party1)
+	gui.canvases.bottomGUI.enabled = false
+	gui.canvases.topGUI.enabled = false
+	gui.canvases.bottomGUI = nil
+	gui.canvases.topGUI = nil
+
+	gui.canvases["primary"].drawfunc = nil
+
+	gui.mouse_events.clear()
+
+	state = prevState
+
+	return party1
+end
 
 -- Factory to build a move iterator.
 	-- Mode 1 iterates over party1's moves,
@@ -204,30 +220,24 @@ local function aiGenerator(exploreUnknownChance, randomChance)
 
 	-- party2{moves, knownMoveCombos} >> (int) -> int
 	return function(enemyMoveId)
-		print("move")
 		-- Random move
 		if math.random() <= randomChance then
 			return math.random(moveCount)
 		end
 		-- TODO: fairer random distribution
 		if math.random() <= exploreUnknownChance and not exploredAll[enemyMoveId] then
-			print("explore")
 			local a = math.random(moveCount)
-			print(a)
 			local b = a
 			local em = moveCombos[enemyMoves[enemyMoveId].name]
 			while em[moves[a].name] do
 				a = a < moveCount and
 					a + 1 or 1
-				print(a, b)
 				if a == b then
 					exploredAll[enemyMoveId] = true
-					print("explored all "..tostring(enemyMoveId))
 					break
 				end
 			end
 			if not em[moves[a].name] then
-				print(a, enemyMoves[enemyMoveId].name)
 				return a
 			end
 		end
@@ -236,7 +246,6 @@ local function aiGenerator(exploreUnknownChance, randomChance)
 		if lastCombo[1] and lastCombo[2] then
 			if moveCombos[lastCombo[1].name].best then
 				a = moves[moveCombos[lastCombo[1].name].best.name].id
-				print(a)
 				return a
 			end
 		end
@@ -456,6 +465,7 @@ local function drawFunc()
 				applied1 = false,
 				applied2 = false,
 			}
+			if party1.hp < 1 or party2.hp < 1 then deinitBattleState(prevState, party1) end
 		end
 	elseif attackAnimPhase == "attack" then
 		local localtimer = (3-attackAnimTimer) % 1.5
@@ -510,7 +520,7 @@ local function drawFunc()
 		end
 	end
 
-	attackAnimTimer = attackAnimTimer-0.0166
+	attackAnimTimer = attackAnimTimer-0.0166 -- what
 
 	-- Display only when the player isn't selecting a move.
 	if p1selected > 0 and p1selected <= #party1.moves then
@@ -631,11 +641,6 @@ end
 
 -- p1selected, attackAnimPhase >> (int) >> attackAnimPhase, attackAnimTimer, attackAnimData
 local function diamondClick(clicks)
-	local _, y = diamondTransform:inverseTransformPoint(love.mouse.getX(), love.mouse.getY())
-	y = math.floor((y - Y(-180)) / gui.diamondSizeY)
-	p1selected = y + 3 -- HACK
-	print(p1selected)
-
 	if clicks <= 1 then return end
 	if p1selected > 0 and attackAnimPhase == "none" then
 		attackAnimPhase = "scramble"
@@ -661,7 +666,7 @@ end
 -- This will select the move based on cursor Y position.
 local p1Click = function(clicks)
 	local step = S(150) / #party1.moves
-	local y = math.floor((love.mouse.getY() - Y(-30)) / step) -- integer value
+	y = math.floor((love.mouse.getY() - Y(-30)) / step) -- integer value
 
 	if attackAnimPhase == "none" then
 		if clicks > 1 then
@@ -679,6 +684,7 @@ end
 local function initBattleState(prevState, params)
 	party1 = params.party1
 	party2 = params.party2
+	initTutorial = params.initTutorial
 
 	local p1move, p2move
 	for i, j, m1, m2 in moveIter(3) do
@@ -730,6 +736,7 @@ local function initBattleState(prevState, params)
 
 	gui.mouse_events(X(-150), Y(120), diamondCollider, diamondHover, diamondClick, "battle", 1)
 	gui.mouse_events(0, 0, p1Collider, function() end, p1Click, "battle", 2)
+
 end
 
 return initBattleState
