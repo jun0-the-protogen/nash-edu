@@ -12,7 +12,25 @@ function tutorial(prevState, params)
 
 	if tracker == 0 then
 		-- TODO: pre-game instructions
-	elseif tracker === 1 then
+
+		local page = 1
+		local pages = {
+			love.graphics.newImage"assets/1.png",
+			love.graphics.newImage"assets/2.png",
+			love.graphics.newImage"assets/3.png",
+			love.graphics.newImage"assets/4.png",
+			love.graphics.newImage"assets/5.png",
+			love.graphics.newImage"assets/6.png",
+			love.graphics.newImage"assets/7.png",
+		}
+
+		local function drawFunc()
+			love.graphics.draw(pages[page])
+		end
+		gui.canvases["primary"].drawfunc = drawFunc
+		gui.canvases["primary"].enabled = true
+
+	elseif tracker == 1 then
 		state = "battle"
 
 		states.battle("tutorial", {
@@ -23,6 +41,8 @@ function tutorial(prevState, params)
 
 	elseif tracker == 2 then
 		-- "Let's try a harder one"
+		state = "battle"
+
 		 states.battle("tutorial", {
 			party1 = player,
 			party2 = enemy2,
