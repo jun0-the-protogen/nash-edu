@@ -308,6 +308,7 @@ local function polyDiamondCellP2Half(x, y)
 	
 end
 
+-- NOTE: considering moving this to gui.lua
 local baseColors = {
 	fill =     {0.75, 0.75, 0.75, 1},
 	filldark = {0.6 , 0.6 , 0.6 , 1},

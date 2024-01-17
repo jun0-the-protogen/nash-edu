@@ -1,2 +1,0 @@
-# nash-edu
-# nash-edu
