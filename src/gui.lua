@@ -99,7 +99,10 @@ local mouse_events_mt = {
 
 	--Custom metamethods
 	__index = function(self, k)
-		local function clear() self = {} end
+		local function clear(index)
+				if index then self[index] = {}
+				else self = {} end
+		end
 		local function iter(state, cx, cy, click, presses)
 			if click == nil then click = false end
 			local i

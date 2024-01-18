@@ -36,23 +36,11 @@ end
 ]]
 function love.draw()
 	gui.canvases.draw()
-	--XXX: Debug
-	--({}) -> ""
-	function tts(x, depth)
-		depth = depth or ""
-		ret = ""
-		for k, v in next, x do
-			ret = ret.."\n"..depth.."["..tostring(k).."]: "..(type(v) == "table" and tts(v, depth.."\t") or v == nil and "nil" or tostring(v))
-		end
-		ret = #ret == 0 and "{}" or ret
-		return ret
-	end
-	-- love.graphics.print(tts(party2.moves), X(0), 0)
-	-- love.graphics.print(tts(party1.moves), 0, 0)
 end
 
 function love.update(dt) --currently handles all GUI interfacing (other than the function below)
 	gui.mouse_events.iter(state, love.mouse.getX(), love.mouse.getY())
+
 end
 
 function love.mousepressed(x, y, button, istouch, presses)

@@ -1,11 +1,11 @@
 local party1 = {}
 local party2 = {}
+local deinitCallback = function() end
 
 local lastCombo = {} -- Remember to reassign the table every time!
+local moveRepeatCount = 1
 
-local function deinitBattleState(prevState, party1)
-	gui.canvases.bottomGUI.enabled = false
-	gui.canvases.topGUI.enabled = false
+local function deinitBattleState(prevState, party1, deinitCallback)
 	gui.canvases.bottomGUI = nil
 	gui.canvases.topGUI = nil
 
@@ -15,7 +15,9 @@ local function deinitBattleState(prevState, party1)
 
 	state = prevState
 
-	return party1
+	deinitCallback()
+
+	return player1
 end
 
 -- Factory to build a move iterator.
@@ -173,6 +175,15 @@ local function resolveMoves(move1, move2, party1, party2)
 		party2.knownMoveCombos[move1.name][move2.name] = m2
 	end
 
+	moveRepeatCount = lastCombo[1] and
+			  m1.name == lastCombo[1].name and
+			  m1.selfDamage == lastCombo[1].selfDamage and
+			  m1.enemyDamage == lastCombo[1].enemyDamage and
+
+			  m2.name == lastCombo[2].name and
+			  m2.selfDamage == lastCombo[2].selfDamage and
+			  m2.enemyDamage == lastCombo[2].enemyDamage and
+			  moveRepeatCount + 1 or 1
 	lastCombo = {m1, m2}
 
 	return {
@@ -364,6 +375,10 @@ local diamondXDrawPrio = false
 
 -- () >> love.graphics
 local function drawFunc()
+	if (party1.hp < 1 or party2.hp < 1 or moveRepeatCount == 3) and attackAnimPhase ~= "done" then
+		attackAnimTimer = 1
+		attackAnimPhase = "done"
+	end
 	local i
 	-- draw playfield and choice diamond
 	love.graphics.clear(0,0,0,1)
@@ -466,7 +481,6 @@ local function drawFunc()
 				applied1 = false,
 				applied2 = false,
 			}
-			if party1.hp < 1 or party2.hp < 1 then deinitBattleState(prevState, party1) end
 		end
 	elseif attackAnimPhase == "attack" then
 		local localtimer = (3-attackAnimTimer) % 1.5
@@ -519,6 +533,8 @@ local function drawFunc()
 			attackAnimData = {}
 			p2selected = 0
 		end
+	elseif attackAnimPhase == "done" and attackAnimTimer < 0 then
+		deinitBattleState(prevState, party1, deinitCallback)
 	end
 
 	attackAnimTimer = attackAnimTimer-0.0166 -- what
@@ -685,7 +701,7 @@ end
 local function initBattleState(prevState, params)
 	party1 = params.party1
 	party2 = params.party2
-	initTutorial = params.initTutorial
+	deinitCallback = params.deinitCallback
 
 	local p1move, p2move
 	for i, j, m1, m2 in moveIter(3) do
