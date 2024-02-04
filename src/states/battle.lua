@@ -375,7 +375,8 @@ local diamondXDrawPrio = false
 
 -- () >> love.graphics
 local function drawFunc()
-	if (party1.hp < 1 or party2.hp < 1 or moveRepeatCount == 3) and attackAnimPhase ~= "done" then
+	print(lastCombo[1] and lastCombo[1].selfDamage, lastCombo[2] and lastCombo[2].selfDamage)
+	if (party1.hp < 1 or party2.hp < 1 or moveRepeatCount == 5 and lastCombo[1].selfDamage < 1 and lastCombo[2].selfDamage < 1) and attackAnimPhase ~= "done" then
 		attackAnimTimer = 1
 		attackAnimPhase = "done"
 	end
