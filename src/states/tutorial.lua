@@ -6,6 +6,8 @@ function tutorial(prevState, params)
 	local creatures = params.creatures
 	local states = params.states
 
+	local ifRepeat = false
+
 	state = "tutorial"
 
 	player = creatures.getCreature("demoPlayer")
@@ -109,16 +111,22 @@ function tutorial(prevState, params)
 		player = states.battle(state, {
 			party1 = player,
 			party2 = enemy,
-			deinitCallback = function()
+			deinitCallback = function(lastCombo, party1)
+				local finalMoves = {lastCombo[1].name, lastCombo[2].name} -- Used to determine which slides to show.
+				ifRepeat = finalMoves[1] == finalMoves[2] and finalMoves[1] == "Slash"
+
 				state = "tutorial"
 				drawBuf = {}
 
 				local page = 1
-				local pages = {
+
+				local pages = ifRepeat and
+				{
 					love.graphics.newImage"assets/n1.png",
 					love.graphics.newImage"assets/n2.png",
 					love.graphics.newImage"assets/n3.png",
-				}
+				} or
+				{love.graphics.newImage"assets/n4.png"}
 
 				gui.mouse_events(0, 0,
 					-- Collider
@@ -184,6 +192,7 @@ function tutorial(prevState, params)
 									love.graphics.polygon("fill", 1280 - S(14), Y(-3), 1280 - S(14), Y(3), 1280 - S(6), Y(0))
 							end}
 					else
+						-- FIXME: repeat
 							gui.canvases["primary"].drawFunc = nil
 							gui.canvases["primary"].enabled = false
 							love.event.quit()

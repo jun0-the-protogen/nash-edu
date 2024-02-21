@@ -1,6 +1,7 @@
 local party1 = {}
 local party2 = {}
 local deinitCallback = function() end
+local endreason = ""
 
 local lastCombo = {} -- Remember to reassign the table every time!
 local moveRepeatCount = 1
@@ -15,9 +16,9 @@ local function deinitBattleState(prevState, party1, deinitCallback)
 
 	state = prevState
 
-	deinitCallback()
+	deinitCallback(lastCombo, party1)
 
-	return player1
+	return party1, endreason
 end
 
 -- Factory to build a move iterator.
