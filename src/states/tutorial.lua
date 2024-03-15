@@ -12,6 +12,8 @@ function tutorial(prevState, params)
 
 	player = creatures.getCreature("demoPlayer")
 	enemy = creatures.getCreature("demoPentagon")
+	player.hp = 5
+	enemy.hp = 5
 
 	if tracker == 0 then
 
