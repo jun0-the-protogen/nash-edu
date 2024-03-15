@@ -16,17 +16,22 @@ local states = {
 }
 state = "main"
 
+-- Function to use for the state machine.
+-- (stateFunction, parameters{}) >> state, love -> return{}
+stateFunction = function() end
+stateParameters = {}
+
 function love.load() --Place initializations here
 	math.randomseed(os.time()) -- just to set it up
 	w, h, s = 640, 360, 2
 	success = love.window.setMode(w*s, h*s, {} )
-
-	tutorial = true --TODO
 	
 	states.tutorial("main", {
 		creatures = creatures,
 		states = states,
 	})
+
+	-- stateFunction(stateFunction, stateParameters)
 end
 
 --[[ --TODO: rescale-friendly UI
