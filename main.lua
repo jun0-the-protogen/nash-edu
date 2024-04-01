@@ -18,20 +18,31 @@ state = "main"
 
 -- Function to use for the state machine.
 -- (stateFunction, parameters{}) >> state, love -> return{}
-stateFunction = function() end
-stateParameters = {}
+local stateFunction = function() end
+local stateParameters = {}
+
+-- Function to change the current state 
+function changeState(newState, newParameters)
+	stateFunction = newState
+	stateParameters = newParameters
+end
 
 function love.load() --Place initializations here
 	math.randomseed(os.time()) -- just to set it up
 	w, h, s = 640, 360, 2
 	success = love.window.setMode(w*s, h*s, {} )
 	
-	states.tutorial("main", {
-		creatures = creatures,
-		states = states,
-	})
+	-- states.tutorial("main", {
+	-- 	creatures = creatures,
+	-- 	states = states,
+	-- })
+	
+	stateFunction = states.tutorial
+	stateParameters = {
+	 	creatures = creatures,
+	 	states = states,
+	}
 
-	-- stateFunction(stateFunction, stateParameters)
 end
 
 --[[ --TODO: rescale-friendly UI
@@ -45,6 +56,12 @@ end
 
 function love.update(dt) --currently handles all GUI interfacing (other than the function below)
 	gui.mouse_events.iter(state, love.mouse.getX(), love.mouse.getY())
+
+	-- FIXME
+	stateFunction(
+		stateFunction, -- Functioning as a previous state pointer.
+		stateParameters -- Table that is passed into the current state function.
+	)
 
 end
 
