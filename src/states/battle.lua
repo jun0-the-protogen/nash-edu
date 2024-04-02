@@ -703,7 +703,12 @@ local function initBattleState(prevState, params)
 	party1 = params.party1
 	party2 = params.party2
 	deinitCallback = params.deinitCallback
+	
+	state = "battle"
 
+	print(#party2)
+
+--[[
 	local p1move, p2move
 	for i, j, m1, m2 in moveIter(3) do
 		local p1move = m1.name
@@ -720,7 +725,7 @@ local function initBattleState(prevState, params)
 
 		party2.knownMoveCombos[p1move].best = {}
 	end
-
+]]--
 
 	party2.ai = aiGenerator(1, 0)
 
