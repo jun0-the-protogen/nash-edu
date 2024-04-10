@@ -7,8 +7,8 @@ enemy = creatures.getCreature("demoPentagon")
 player.hp = 5
 enemy.hp = 5
 
-function tutorial.after(lastCombo, party1)
-	local finalMoves = {lastCombo[1].name, lastCombo[2].name} -- Used to determine which slides to show.
+function tutorial.after(prevState, params)
+	local finalMoves = {params.lastCombo[1].name, params.lastCombo[2].name} -- Used to determine which slides to show.
 	ifRepeat = finalMoves[1] == finalMoves[2] and finalMoves[1] == "Slash"
 
 	state = "tutorial"
@@ -193,9 +193,10 @@ function tutorial.before(prevState, params)
 					party1 = player,
 					party2 = enemy,
 
-					deinitCallback = function()
+					deinitCallback = function(lastCombo, party1)
 						stateFunction = tutorial.after
 						stateParameters = {
+							lastCombo = lastCombo,
 						 	creatures = creatures,
 						 	states = states,
 						}
