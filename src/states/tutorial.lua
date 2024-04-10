@@ -189,7 +189,7 @@ function tutorial.before(prevState, params)
 				gui.mouse_events.clear("tutorial")
 
 				stateFunction = states.battle
-				stateParams = {
+				stateParameters = {
 					party1 = player,
 					party2 = enemy,
 
