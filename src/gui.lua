@@ -59,7 +59,7 @@ local canvases_mt = {
 		end
 	end,
 
-	--Counts the integer pairs of the 
+	-- Counts the integer pairs of the 
 	__len = function(self)
 		if self[1] == nil then return 0 end
 		r = 0
@@ -67,7 +67,7 @@ local canvases_mt = {
 		return r
 	end,
 
-	--Instantiates a new Canvas at the top layer (if order is not specified). Names are used to access the canvas after its creation and after the destruction of local references in functions.
+	-- Instantiates a new Canvas at the top layer (if order is not specified). Names are used to access the canvas after its creation and after the destruction of local references in functions.
 	__call = function(self, x, y, w, h, order, name)
 		if order == nil or (type(order) ~= "number") then
 			order = #self + 1
